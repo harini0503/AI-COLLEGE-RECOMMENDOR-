@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Future Track</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#eef6ff;
+margin:0;
+color:#003366;
+}
+
+header{
+background:#0077ff;
+color:white;
+text-align:center;
+padding:20px;
+font-size:28px;
+}
+
+.page{
+width:80%;
+margin:auto;
+margin-top:40px;
+display:none;
+animation:slide 0.6s;
+}
+
+.active{
+display:block;
+}
+
+input,select,button{
+width:100%;
+padding:10px;
+margin:10px 0;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+background:#0077ff;
+color:white;
+border:none;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#0055cc;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+margin:15px 0;
+box-shadow:0 5px 10px rgba(0,0,0,0.1);
+animation:fade 0.5s;
+}
+
+@keyframes slide{
+from{
+opacity:0;
+transform:translateX(50px);
+}
+to{
+opacity:1;
+transform:translateX(0);
+}
+}
+
+@keyframes fade{
+from{opacity:0;}
+to{opacity:1;}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>Future Track</header>
+
+
+<!-- PAGE 1 -->
+
+<div class="page active" id="page1">
+
+<h2>Student Details</h2>
+
+<input id="name" placeholder="Enter Name">
+<input id="email" placeholder="Enter Email">
+<input id="place" placeholder="Enter Place">
+
+<button onclick="nextPage(2)">Next</button>
+
+</div>
+
+
+<!-- PAGE 2 -->
+
+<div class="page" id="page2">
+
+<h2>Cutoff Calculator</h2>
+
+<input id="maths" placeholder="Maths Mark">
+<input id="physics" placeholder="Physics Mark">
+<input id="chemistry" placeholder="Chemistry Mark">
+<input id="biology" placeholder="Biology Mark (Medical only)">
+
+<button onclick="calculateCutoff()">Calculate Cutoff</button>
+
+<h3 id="cutoffResult"></h3>
+
+<button onclick="nextPage(3)">Next</button>
+
+</div>
+
+
+<!-- PAGE 3 -->
+
+<div class="page" id="page3">
+
+<h2>Select Stream</h2>
+
+<select id="stream">
+
+<option>Engineering</option>
+<option>Medical</option>
+<option>Arts and Science</option>
+<option>Law</option>
+
+
+</select>
+
+<h2>Select District</h2>
+
+<select id="district">
+
+<option>Chennai</option>
+<option>Coimbatore</option>
+<option>Madurai</option>
+<option>Salem</option>
+<option>Tiruchirappalli</option>
+<option>Tirunelveli</option>
+<option>Erode</option>
+<option>Vellore</option>
+<option>Thanjavur</option>
+<option>Dindigul</option>
+<option>Krishnagiri</option>
+<option>Dharmapuri</option>
+<option>Namakkal</option>
+<option>Karur</option>
+<option>Nagapattinam</option>
+<option>Cuddalore</option>
+<option>Kanchipuram</option>
+<option>Tiruvallur</option>
+<option>Virudhunagar</option>
+<option>Sivagangai</option>
+<option>Ramanathapuram</option>
+<option>Pudukkottai</option>
+<option>Tenkasi</option>
+<option>Kanyakumari</option>
+<option>Thoothukudi</option>
+<option>Perambalur</option>
+<option>Ariyalur</option>
+<option>Nilgiris</option>
+<option>Tirupur</option>
+<option>Ranipet</option>
+<option>Tirupattur</option>
+<option>Chengalpattu</option>
+<option>Kallakurichi</option>
+<option>Mayiladuthurai</option>
+<option>Tiruvannamalai</option>
+<option>Villupuram</option>
+<option>Theni</option>
+<option>Tiruvarur</option>
+
+</select>
+
+
+<h2>Select Course</h2>
+
+<select id="course">
+
+<option>Computer Science</option>
+<option>Mechanical Engineering</option>
+<option>Civil Engineering</option>
+<option>MBBS</option>
+<option>BDS</option>
+
+</select>
+
+<button onclick="showColleges()">Show Colleges</button>
+
+</div>
+
+
+<!-- PAGE 4 -->
+
+<div class="page" id="page4">
+
+<h2>Suggested Colleges</h2>
+
+<div id="collegeList"></div>
+
+</div>
+
+
+<script>
+
+let cutoff=0
+
+
+function nextPage(page){
+
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"))
+
+document.getElementById("page"+page).classList.add("active")
+
+}
+
+
+
+function calculateCutoff(){
+
+let maths=parseFloat(document.getElementById("maths").value)||0
+let physics=parseFloat(document.getElementById("physics").value)||0
+let chemistry=parseFloat(document.getElementById("chemistry").value)||0
+let biology=parseFloat(document.getElementById("biology").value)||0
+
+cutoff=(maths/2)+(physics/4)+(chemistry/4)
+
+document.getElementById("cutoffResult").innerHTML="Cutoff : "+cutoff.toFixed(2)
+
+}
+
+
+
+function showColleges(){
+
+nextPage(4)
+
+let district=document.getElementById("district").value
+let course=document.getElementById("course").value
+
+let colleges=[
+
+{
+name:"Anna University",
+district:"Chennai",
+course:"Computer Science",
+fees:"₹50,000/year",
+placement:"90%",
+hostel:"Available"
+},
+
+{
+name:"SRM Institute",
+district:"Chengalpattu",
+course:"Computer Science",
+fees:"₹2,50,000/year",
+placement:"88%",
+hostel:"Available"
+},
+
+{
+name:"PSG Tech",
+district:"Coimbatore",
+course:"Mechanical Engineering",
+fees:"₹1,00,000/year",
+placement:"85%",
+hostel:"Available"
+},
+
+{
+name:"Madurai Medical College",
+district:"Madurai",
+course:"MBBS",
+fees:"₹30,000/year",
+placement:"Hospital Internship",
+hostel:"Available"
+},
+
+{
+name:"CMC Vellore",
+district:"Vellore",
+course:"MBBS",
+fees:"₹80,000/year",
+placement:"Medical Internship",
+hostel:"Available"
+}
+
+]
+
+let output=""
+
+colleges.forEach(c=>{
+
+if(c.district==district && c.course==course){
+
+output+=`
+
+<div class="card">
+
+<h3>${c.name}</h3>
+
+<p><b>District:</b> ${c.district}</p>
+<p><b>Course:</b> ${c.course}</p>
+<p><b>Fees:</b> ${c.fees}</p>
+<p><b>Placement:</b> ${c.placement}</p>
+<p><b>Hostel:</b> ${c.hostel}</p>
+
+</div>
+
+`
+
+}
+
+})
+
+if(output==""){
+output="<p>No colleges found for this selection</p>"
+}
+
+document.getElementById("collegeList").innerHTML=output
+
+}
+
+</script>
+
+</body>
+</html>

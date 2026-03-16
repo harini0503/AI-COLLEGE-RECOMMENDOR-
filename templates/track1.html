@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Future Track</title>
+
+<style>
+
+body{
+font-family: Arial;
+margin:0;
+background:#f4f9ff;
+color:#003366;
+}
+
+header{
+background:#0077ff;
+color:white;
+text-align:center;
+padding:20px;
+font-size:28px;
+letter-spacing:2px;
+animation:fadeDown 1s;
+}
+
+.container{
+width:80%;
+margin:auto;
+padding:20px;
+animation:fadeUp 1s;
+}
+
+input,select,button{
+width:100%;
+padding:10px;
+margin:10px 0;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+background:#0077ff;
+color:white;
+border:none;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#0055cc;
+}
+
+.card{
+background:white;
+padding:20px;
+margin:20px 0;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+animation:fadeUp 0.6s;
+}
+
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(30px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes fadeDown{
+from{opacity:0;transform:translateY(-30px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+.hidden{
+display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>Future Track – College Analyzer</header>
+
+<div class="container" id="formPage">
+
+<h2>Student Details</h2>
+
+<input id="name" placeholder="Enter Name">
+
+<input id="email" placeholder="Enter Email">
+
+<input id="place" placeholder="Enter Place">
+
+<h3>Select Stream</h3>
+
+<select id="stream">
+<option>Engineering</option>
+<option>Medical</option>
+</select>
+
+<h3>Enter Marks</h3>
+
+<input id="maths" placeholder="Maths Mark">
+<input id="physics" placeholder="Physics Mark">
+<input id="chemistry" placeholder="Chemistry Mark">
+<input id="biology" placeholder="Biology Mark (Medical only)">
+
+<h3>Select District</h3>
+
+<select id="district">
+
+<option>Chennai</option>
+<option>Coimbatore</option>
+<option>Madurai</option>
+<option>Salem</option>
+<option>Tiruchirappalli</option>
+<option>Tirunelveli</option>
+<option>Erode</option>
+<option>Vellore</option>
+<option>Thanjavur</option>
+<option>Dindigul</option>
+<option>Krishnagiri</option>
+<option>Dharmapuri</option>
+<option>Namakkal</option>
+<option>Karur</option>
+<option>Nagapattinam</option>
+<option>Cuddalore</option>
+<option>Kanchipuram</option>
+<option>Tiruvallur</option>
+<option>Virudhunagar</option>
+<option>Sivagangai</option>
+<option>Ramanathapuram</option>
+<option>Pudukkottai</option>
+<option>Tenkasi</option>
+<option>Kanyakumari</option>
+<option>Thoothukudi</option>
+<option>Perambalur</option>
+<option>Ariyalur</option>
+<option>Nilgiris</option>
+<option>Tirupur</option>
+<option>Ranipet</option>
+<option>Tirupattur</option>
+<option>Chengalpattu</option>
+<option>Kallakurichi</option>
+<option>Mayiladuthurai</option>
+<option>Tiruvannamalai</option>
+<option>Villupuram</option>
+<option>Theni</option>
+<option>Tiruvarur</option>
+
+</select>
+
+<h3>Select Course</h3>
+
+<select id="course">
+<option>Computer Science</option>
+<option>Mechanical Engineering</option>
+<option>Civil Engineering</option>
+<option>MBBS</option>
+<option>BDS</option>
+</select>
+
+<button onclick="calculate()">Analyze Colleges</button>
+
+</div>
+
+
+<div class="container hidden" id="resultPage">
+
+<h2 id="cutoffResult"></h2>
+
+<div id="collegeList"></div>
+
+</div>
+
+
+<script>
+
+function calculate(){
+
+let stream=document.getElementById("stream").value
+
+let maths=parseFloat(document.getElementById("maths").value)||0
+let physics=parseFloat(document.getElementById("physics").value)||0
+let chemistry=parseFloat(document.getElementById("chemistry").value)||0
+let biology=parseFloat(document.getElementById("biology").value)||0
+
+let cutoff=0
+
+if(stream=="Engineering"){
+cutoff=(maths/2)+(physics/4)+(chemistry/4)
+}
+
+else{
+cutoff=(biology/2)+(physics/4)+(chemistry/4)
+}
+
+document.getElementById("cutoffResult").innerHTML=
+"Calculated Cutoff : "+cutoff.toFixed(2)
+
+document.getElementById("formPage").classList.add("hidden")
+document.getElementById("resultPage").classList.remove("hidden")
+
+showColleges()
+
+}
+
+
+function showColleges(){
+
+let colleges=[
+
+{
+name:"Anna University",
+district:"Chennai",
+course:"Computer Science",
+fees:"₹50,000/year",
+placement:"90%",
+hostel:"Available"
+},
+
+{
+name:"PSG College of Technology",
+district:"Coimbatore",
+course:"Mechanical Engineering",
+fees:"₹1,00,000/year",
+placement:"85%",
+hostel:"Available"
+},
+
+{
+name:"SRM Institute",
+district:"Chengalpattu",
+course:"Computer Science",
+fees:"₹2,50,000/year",
+placement:"88%",
+hostel:"Available"
+},
+
+{
+name:"CMC Vellore",
+district:"Vellore",
+course:"MBBS",
+fees:"₹80,000/year",
+placement:"Medical Internship",
+hostel:"Available"
+},
+
+{
+name:"Madurai Medical College",
+district:"Madurai",
+course:"MBBS",
+fees:"₹30,000/year",
+placement:"Hospital Internship",
+hostel:"Available"
+}
+
+]
+
+let district=document.getElementById("district").value
+let course=document.getElementById("course").value
+
+let output=""
+
+colleges.forEach(c=>{
+
+if(c.district==district && c.course==course){
+
+output+=`
+
+<div class="card">
+
+<h3>${c.name}</h3>
+
+<p><b>District:</b> ${c.district}</p>
+<p><b>Course:</b> ${c.course}</p>
+<p><b>Fees:</b> ${c.fees}</p>
+<p><b>Placement:</b> ${c.placement}</p>
+<p><b>Hostel:</b> ${c.hostel}</p>
+
+</div>
+
+`
+
+}
+
+})
+
+if(output==""){
+output="<p>No colleges found for this selection.</p>"
+}
+
+document.getElementById("collegeList").innerHTML=output
+
+}
+
+</script>
+
+</body>
+</html>

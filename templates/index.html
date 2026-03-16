@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="FutureTrack – AI-Powered College Analyzer for Tamil Nadu students. Calculate your cutoff, discover colleges, and get personalized suggestions powered by Gemini AI.">
+  <title>FutureTrack – AI College Analyzer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='logo.ico') }}">
+  <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='logo.ico') }}">
+  <!-- html2pdf.js for PDF download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+
+  <!-- Background Particles -->
+  <div class="bg-particles">
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <a class="logo" href="#">
+      <div class="logo-icon">🎓</div>
+      <span class="logo-text">FutureTrack</span>
+    </a>
+    <div class="nav-api-status" id="apiStatusBtn">
+      <span class="api-dot" id="apiDot"></span>
+      <span id="apiStatusText">Checking AI...</span>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Powered by Gemini 2.5 Flash AI
+      </div>
+      <h1>
+        Your Future,<br>
+        <span class="gradient-text">Intelligently Mapped</span>
+      </h1>
+      <p>Enter your marks, explore cutoff scores, and get AI-powered college suggestions tailored to your interests and
+        location in Tamil Nadu.</p>
+    </section>
+
+    <!-- Step Progress -->
+    <div class="progress-container">
+      <div class="progress-steps">
+        <div class="progress-line" id="progressLine" style="width:0%"></div>
+        <div class="step-item active" data-step="1" onclick="goToStep(1)">
+          <div class="step-circle"><span class="step-number">1</span></div>
+          <span class="step-label">Details</span>
+        </div>
+        <div class="step-item" data-step="2" onclick="goToStep(2)">
+          <div class="step-circle"><span class="step-number">2</span></div>
+          <span class="step-label">Marks</span>
+        </div>
+        <div class="step-item" data-step="3" onclick="goToStep(3)">
+          <div class="step-circle"><span class="step-number">3</span></div>
+          <span class="step-label">Preferences</span>
+        </div>
+        <div class="step-item" data-step="4" onclick="goToStep(4)">
+          <div class="step-circle"><span class="step-number">4</span></div>
+          <span class="step-label">Results</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Container -->
+    <div class="form-container">
+      <div class="glass-card">
+
+        <!-- STEP 1: Student Details -->
+        <div class="step-page active" id="step1">
+          <h2><span class="icon">👤</span> Student Details</h2>
+          <p class="step-subtitle">Tell us a bit about yourself to get started</p>
+
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-input" id="studentName" placeholder="e.g. Arun Kumar">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" id="studentEmail" placeholder="arun@example.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" class="form-input" id="studentPhone" placeholder="+91 98765 43210">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Location / City</label>
+            <input type="text" class="form-input" id="studentPlace" placeholder="e.g. Coimbatore">
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary btn-lg" onclick="nextStep()">
+              Continue <span class="btn-icon">→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: Marks Entry -->
+        <div class="step-page" id="step2">
+          <h2><span class="icon">📊</span> Enter Your Marks</h2>
+          <p class="step-subtitle">We'll calculate your cutoff based on the Tamil Nadu formula</p>
+
+          <!-- Stream Toggle -->
+          <div class="stream-toggle">
+            <button class="stream-btn active" data-stream="Engineering" onclick="setStream(this)">
+              ⚙️ Engineering
+            </button>
+            <button class="stream-btn" data-stream="Medical" onclick="setStream(this)">
+              🩺 Medical
+            </button>
+          </div>
+
+          <!-- Marks Grid -->
+          <div class="marks-grid">
+            <div class="mark-card" id="mathsCard">
+              <div class="subject-icon">📐</div>
+              <div class="subject-name">Mathematics</div>
+              <input type="number" id="mathsMark" placeholder="/ 200" min="0" max="200" oninput="previewCutoff()">
+            </div>
+            <div class="mark-card">
+              <div class="subject-icon">⚛️</div>
+              <div class="subject-name">Physics</div>
+              <input type="number" id="physicsMark" placeholder="/ 200" min="0" max="200" oninput="previewCutoff()">
+            </div>
+            <div class="mark-card">
+              <div class="subject-icon">🧪</div>
+              <div class="subject-name">Chemistry</div>
+              <input type="number" id="chemistryMark" placeholder="/ 200" min="0" max="200" oninput="previewCutoff()">
+            </div>
+            <div class="mark-card" id="biologyCard" style="display:none;">
+              <div class="subject-icon">🧬</div>
+              <div class="subject-name">Biology</div>
+              <input type="number" id="biologyMark" placeholder="/ 200" min="0" max="200" oninput="previewCutoff()">
+            </div>
+          </div>
+
+          <!-- Live Preview -->
+          <div style="text-align:center; margin-top:var(--space-lg); color:var(--text-secondary); font-size:14px;">
+            Live Preview: <span id="livePreview"
+              style="font-weight:700; color:var(--accent-secondary); font-size:18px;">0.00</span>
+            <span style="color:var(--text-muted);">/ 200</span>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+            <button class="btn btn-primary btn-lg" onclick="nextStep()">
+              Calculate & Continue <span class="btn-icon">→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Preferences -->
+        <div class="step-page" id="step3">
+          <h2><span class="icon">🎯</span> Your Preferences</h2>
+          <p class="step-subtitle">Help our AI find the perfect colleges for you</p>
+
+          <!-- Cutoff Preview Card -->
+          <div class="cutoff-display" id="cutoffPreview" style="display:none;">
+            <div class="cutoff-gauge">
+              <svg viewBox="0 0 160 160">
+                <defs>
+                  <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#6c5ce7" />
+                    <stop offset="50%" style="stop-color:#a29bfe" />
+                    <stop offset="100%" style="stop-color:#00cec9" />
+                  </linearGradient>
+                </defs>
+                <circle class="gauge-bg" cx="80" cy="80" r="70" />
+                <circle class="gauge-fill" id="gaugeFill" cx="80" cy="80" r="70" />
+              </svg>
+              <div class="cutoff-value">
+                <div class="cutoff-number" id="cutoffNumber">0</div>
+                <div class="cutoff-max">/ 200</div>
+              </div>
+            </div>
+            <div class="cutoff-tier" id="cutoffTier"></div>
+            <p class="cutoff-message" id="cutoffMessage"></p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Preferred District</label>
+            <select class="form-select" id="districtSelect">
+              <option value="">Select a district...</option>
+              <option>Chennai</option>
+              <option>Coimbatore</option>
+              <option>Madurai</option>
+              <option>Salem</option>
+              <option>Tiruchirappalli</option>
+              <option>Tirunelveli</option>
+              <option>Erode</option>
+              <option>Vellore</option>
+              <option>Thanjavur</option>
+              <option>Dindigul</option>
+              <option>Krishnagiri</option>
+              <option>Dharmapuri</option>
+              <option>Namakkal</option>
+              <option>Karur</option>
+              <option>Nagapattinam</option>
+              <option>Cuddalore</option>
+              <option>Kanchipuram</option>
+              <option>Tiruvallur</option>
+              <option>Virudhunagar</option>
+              <option>Sivagangai</option>
+              <option>Ramanathapuram</option>
+              <option>Pudukkottai</option>
+              <option>Tenkasi</option>
+              <option>Kanyakumari</option>
+              <option>Thoothukudi</option>
+              <option>Perambalur</option>
+              <option>Ariyalur</option>
+              <option>Nilgiris</option>
+              <option>Tirupur</option>
+              <option>Ranipet</option>
+              <option>Tirupattur</option>
+              <option>Chengalpattu</option>
+              <option>Kallakurichi</option>
+              <option>Mayiladuthurai</option>
+              <option>Tiruvannamalai</option>
+              <option>Villupuram</option>
+              <option>Theni</option>
+              <option>Tiruvarur</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Area of Interest</label>
+            <div class="interest-tags" id="interestTags"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Additional Preferences (Optional)</label>
+            <input type="text" class="form-input" id="additionalPrefs"
+              placeholder="e.g. scholarship, low fees, top placement...">
+          </div>
+
+          <div id="stepError" class="error-box"></div>
+
+          <div class="btn-group">
+            <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+            <button class="btn btn-primary btn-lg" id="suggestBtn" onclick="getSuggestions()">
+              🤖 Get AI Suggestions <span class="btn-icon">→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 4: Results -->
+        <div class="step-page" id="step4">
+          <div id="loadingState" class="loading-container" style="display:none;">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">🤖 Gemini AI is analyzing your profile...</p>
+            <p class="loading-subtext">Finding the best colleges in Tamil Nadu for you</p>
+          </div>
+
+          <div id="resultsContent" style="display:none;">
+            <div class="results-header">
+              <h2><span class="icon">🏫</span> Your College Matches</h2>
+              <p id="resultsSubtitle">AI-curated suggestions based on your profile</p>
+            </div>
+          </div>
+
+          <div class="btn-group" id="resultsActions" style="display:none;">
+            <button class="btn btn-secondary" onclick="goToStep(1)">🔄 Start Over</button>
+            <button class="btn btn-primary" onclick="getSuggestions()">🤖 Regenerate</button>
+            <button class="btn btn-pdf" onclick="downloadPDF()">📄 Download PDF</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- College Grid (outside glass card for wider layout) -->
+    <div class="college-grid" id="collegeGrid"></div>
+
+    <!-- Hidden PDF content (for generating PDF) -->
+    <div id="pdfContent" style="display:none;"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>© 2026 FutureTrack — Built with 💜 for Students |</p>
+    </footer>
+
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+
+</html>
